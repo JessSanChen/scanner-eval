@@ -120,7 +120,8 @@ results/metrics.csv  +  figures/
   configs/            scanner variants (YAML)
   logs/ scans/ results/ figures/
   tests/
-  PLAN.md  CLAUDE.md  DECISIONS.md  SAFETY.md  README.md
+  docs/               PLAN.md  DECISIONS.md  SAFETY.md
+  README.md  CLAUDE.md  (root: GitHub landing page; Claude Code auto-loads)
 ```
 
 ---
