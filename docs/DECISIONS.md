@@ -39,3 +39,33 @@ Append-only log. Each entry: the choice, alternatives considered, and why. Decis
 **Choice:** The walking skeleton uses `grad_student` and `overt_evader`, 2 seeds each, 4 user turns per conversation (4 transcripts).
 **Alternatives:** Starting at full size (8 personas × ~8 seeds, 8–12 turns).
 **Why:** M1 only proves the pipeline runs end to end; the numbers don't matter yet. One clearly benign persona and one clearly concerning persona give the confusion matrix both classes. Full sizes are decided in M2.
+
+## 2026-09-26 — All three data contracts live in `schema.py`
+
+**Choice:** `Persona`, the transcript-ID helpers and `Assessment` share one module.
+**Alternatives:** One module per contract (`personas.py`, `ids.py`, `schema.py`).
+**Why:** These are the stable interfaces every stage depends on. One file makes them easy to find, review and defend, and each is only a few lines.
+
+## 2026-09-26 — No `labels.csv` for now; persona YAMLs are the label source
+
+**Choice:** Validation gets the persona from the transcript ID and reads ground truth from `personas/{persona}.yaml`.
+**Alternatives:** Generation writes `labels.csv` (the original plan).
+**Why:** `inspect eval` doesn't naturally write extra files, and a second copy of the ground truth can drift from the YAML. We can revisit this if M5's blind self-labels need a home.
+
+## 2026-09-26 — User simulator sees the conversation with roles flipped
+
+**Choice:** The simulator is a separate model call. Its system prompt holds the persona, and it sees the target's replies as "user" turns and its own previous lines as "assistant" turns.
+**Alternatives:** Pass the whole conversation as one text block and ask the simulator for the next user line.
+**Why:** With flipped roles, the simulator is just continuing a chat from its own side, which is what chat models do best. Its prompt never enters `state.messages`, so the hidden objective can't reach the transcript.
+
+## 2026-09-26 — "Seed" means replicate index, not an RNG seed
+
+**Choice:** `seedNN` numbers independent samples of the same persona. Variation comes from ordinary sampling.
+**Alternatives:** Seeded, deterministic generation.
+**Why:** The Anthropic API has no sampling seed, so re-runs can't be bit-for-bit identical. Reproducibility comes from committing the generated logs, not from regenerating them.
+
+## 2026-09-26 — Test for hidden-objective leakage
+
+**Choice:** A pytest loads each committed log the way the scanner does and fails if any persona's `hidden_objective` text appears.
+**Alternatives:** Rely on library defaults. Today Scout's `llm_scanner` loads only messages, not events, and its default template shows no metadata or IDs.
+**Why:** Inspect logs the simulator's call, including its persona prompt, in the event history. Only those two Scout defaults keep it away from the scanner, so a library upgrade could change that silently. The test turns a hard rule into something checked on every run.
