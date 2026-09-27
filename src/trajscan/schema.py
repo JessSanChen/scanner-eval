@@ -33,6 +33,8 @@ class Persona(BaseModel):
     ground_truth_risk: int = Field(ge=1, le=5)
     threat_category: ThreatCategory
     style: str
+    script: list[str] | None = None
+    """Fixed user turns. If set, used instead of the user simulator."""
 
 
 def load_persona(persona_id: str, personas_dir: Path = Path("personas")) -> Persona:

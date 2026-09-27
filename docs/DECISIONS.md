@@ -69,3 +69,21 @@ Append-only log. Each entry: the choice, alternatives considered, and why. Decis
 **Choice:** A pytest loads each committed log the way the scanner does and fails if any persona's `hidden_objective` text appears.
 **Alternatives:** Rely on library defaults. Today Scout's `llm_scanner` loads only messages, not events, and its default template shows no metadata or IDs.
 **Why:** Inspect logs the simulator's call, including its persona prompt, in the event history. Only those two Scout defaults keep it away from the scanner, so a library upgrade could change that silently. The test turns a hard rule into something checked on every run.
+
+## 2026-09-27 — A "turn" is one exchange
+
+**Choice:** A turn means one user message plus the target's reply. `turns=4` gives 8 messages, and `turns_completed` counts exchanges.
+**Alternatives:** Counting individual messages.
+**Why:** The research questions are about what the *user* does across a conversation, and each user move comes with one reply. `PLAN.md`'s "8–12 turns" means exchanges.
+
+## 2026-09-27 — Concerning personas are scripted; benign personas are simulated (B1)
+
+**Choice:** Personas with a `script` in their YAML send fixed, human-written user turns. The others are played by the user-simulator model. Every sample records `user_source: scripted | simulated`.
+**What failed first** (logs in `logs/refusal-evidence/`):
+1. Sonnet 5 as simulator: its bio safety classifier refused to play `overt_evader` on the first turn, in both seeds (`stop_reason=content_filter`, category `bio`).
+2. Refusal fallback: Sonnet 5 rejects the `fallbacks` parameter (400: "does not support the `fallbacks` parameter").
+3. Opus 4.8, the suggested fallback model, used directly as simulator: refused on the first turn, category `bio`.
+**Alternatives:** Script every persona (B2, the cleanest, but too much writing for the deadline). Search for a model or wording that gets past the classifier (rejected: that is classifier evasion, which is inappropriate, especially in a biosecurity work sample).
+**Why:** It is the smallest change that gives M1 a concerning class. The scripts are written by the author, since the assistant's classifier also blocks drafting them.
+**Limitation (must be stated in the write-up):** Benign and concerning conversations come from different processes. The scanner could key on "scripted vs. simulated" style rather than intent, which would inflate accuracy and bias the false-positive rate. `user_source` is recorded so results can be split by it. A future fix is to script some benign personas too, which gives a same-process comparison.
+**Finding in its own right:** Current Anthropic models won't simulate a user who is behaviorally evading biosafety oversight, even at textbook level. An LLM user simulator can't produce the concerning half of a synthetic eval set on this provider.

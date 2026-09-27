@@ -181,6 +181,8 @@ Before looking at scanner output, hand-label ~20 transcripts and report agreemen
 
 **Generator–scanner leakage.** Both halves are LLMs; the generator writes conversations that *display* the objective it was given, so intent may be unrealistically legible. Mitigations: different models for generator and scanner (same provider for now — a weaker mitigation than cross-provider, state it); a few hand-written or hand-edited transcripts as a comparison set; a legibility audit (how separable are classes from single turns?). State plainly: synthetic-persona ground truth measures whether the scanner recovers what the generator encoded — necessary, not sufficient, for working on real logs.
 
+**Scripted vs. simulated users.** The user-simulator models refuse to play concerning personas (bio safety classifier). So concerning personas use human-written scripts while benign personas are simulated. That process difference is a confound; report results split by `user_source`, and see DECISIONS 2026-09-27.
+
 Also consider (time permitting): a small sample of real public chat logs (e.g. WildChat, LMSYS-Chat-1M — check access terms) as a false-positive check on messy benign traffic.
 
 ---

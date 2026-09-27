@@ -1,9 +1,10 @@
 """Stage 1: generate persona conversations as Inspect `.eval` logs.
 
-Each sample is one persona x seed. A user-simulator model plays the persona;
-the target model (the model under `--model`) replies. The simulator's
-instructions live only in its own model call; only its output enters the
-transcript.
+Each sample is one persona x seed. The user side is either the persona's fixed
+`script` (for personas the simulator models refuse to play) or a user-simulator
+model playing the persona. The target model (the model under `--model`) replies
+live. Simulator instructions live only in its own model call; only its output
+enters the transcript.
 
     inspect eval src/trajscan/generate.py \
         --model anthropic/claude-sonnet-5 \
@@ -18,7 +19,6 @@ from inspect_ai.model import (
     ChatMessageAssistant,
     ChatMessageSystem,
     ChatMessageUser,
-    GenerateConfig,
     get_model,
 )
 from inspect_ai.solver import Generate, Solver, TaskState, solver
@@ -69,36 +69,36 @@ def simulator_view(persona: Persona, transcript: list[ChatMessage]) -> list[Chat
 
 
 @solver
-def persona_conversation(turns: int, simulator_fallback: str) -> Solver:
-    """Alternate simulator and target for `turns` exchanges (user message + reply).
+def persona_conversation(turns: int) -> Solver:
+    """Alternate user and target for a number of exchanges (user message + reply).
 
-    If the simulator's safety classifier refuses, the API retries on
-    `simulator_fallback` ("" disables). The target gets no fallback: its
-    refusals are realistic behavior, recorded as data.
+    Personas with a `script` send those fixed turns; the rest are played by the
+    user-simulator model for `turns` exchanges. Refusals are recorded, not retried.
     """
-    simulator_config = GenerateConfig(
-        fallback_models=[simulator_fallback] if simulator_fallback else None
-    )
 
     async def solve(state: TaskState, generate: Generate) -> TaskState:
         persona = load_persona(state.metadata["persona"])
-        simulator = get_model(role="user_simulator", required=True)
 
         # Inspect seeds every sample with its input message; the opening line
-        # must come from the simulator instead.
+        # must come from the persona instead.
         state.messages = []
-        state.metadata.update(refusal=None, turns_completed=0, simulator_served_by=[])
+        state.metadata.update(
+            user_source="scripted" if persona.script else "simulated",
+            refusal=None,
+            turns_completed=0,
+        )
 
-        for turn in range(turns):
-            user_output = await simulator.generate(
-                simulator_view(persona, state.messages), config=simulator_config
-            )
-            served_by = user_output.fallback.fallback_model if user_output.fallback else None
-            state.metadata["simulator_served_by"].append(served_by or user_output.model)
-            if user_output.stop_reason == "content_filter":
-                state.metadata["refusal"] = "user_simulator"
-                break
-            state.messages.append(ChatMessageUser(content=user_output.completion))
+        for turn in range(len(persona.script) if persona.script else turns):
+            if persona.script:
+                user_text = persona.script[turn]
+            else:
+                simulator = get_model(role="user_simulator", required=True)
+                user_output = await simulator.generate(simulator_view(persona, state.messages))
+                if user_output.stop_reason == "content_filter":
+                    state.metadata["refusal"] = "user_simulator"
+                    break
+                user_text = user_output.completion
+            state.messages.append(ChatMessageUser(content=user_text))
 
             state = await generate(state)
             state.metadata["turns_completed"] = turn + 1
@@ -116,7 +116,6 @@ def persona_conversations(
     personas: str = "grad_student,overt_evader",
     seeds: int = 2,
     turns: int = 4,
-    simulator_fallback: str = "claude-opus-4-8",
 ) -> Task:
     samples = [
         Sample(
@@ -127,6 +126,4 @@ def persona_conversations(
         for persona_id in personas.split(",")
         for seed in range(seeds)
     ]
-    return Task(
-        dataset=MemoryDataset(samples), solver=persona_conversation(turns, simulator_fallback)
-    )
+    return Task(dataset=MemoryDataset(samples), solver=persona_conversation(turns))
