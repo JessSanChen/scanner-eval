@@ -1,0 +1,44 @@
+{
+  "scan_id": "QAVkvUY8gTRCXx4vAMqLNE",
+  "scan_name": "scanner-eval",
+  "timestamp": "2026-09-27T10:56:54.199960-04:00",
+  "model": {
+    "model": "anthropic/claude-opus-5",
+    "config": {
+      "max_connections": 25
+    },
+    "args": {}
+  },
+  "revision": {
+    "type": "git",
+    "origin": "https://github.com/JessSanChen/scanner-eval.git",
+    "version": "0.0.0-dev.0+unknown",
+    "commit": "b3c9db5"
+  },
+  "packages": {
+    "inspect_ai": "0.3.271",
+    "inspect_scout": "0.5.3"
+  },
+  "options": {
+    "max_transcripts": 25
+  },
+  "transcripts": {
+    "type": "eval_log",
+    "filter": [],
+    "transcript_ids": {
+      "BGsi5qYBm8BqT9dn4eXB5X": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval",
+      "X27ZtmoCijgzSvmB6ukc5a": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval",
+      "PnecS4EXDygcPStpzvSCJg": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval",
+      "65zspqi4JqUdeECWgUeco2": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval"
+    },
+    "count": 0
+  },
+  "scanners": {
+    "whole_transcript": {
+      "name": "whole_transcript",
+      "version": 0,
+      "file": "src/trajscan/scanners.py",
+      "params": {}
+    }
+  }
+}
