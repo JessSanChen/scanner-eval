@@ -1,0 +1,35 @@
+[project]
+name = "trajscan"
+version = "0.1.0"
+description = "Conversation-log scanner and evaluation harness: per-turn vs. whole-trajectory risk assessment"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=1.8.0",
+    "inspect-ai>=0.3.271",
+    "inspect-scout>=0.5.3",
+    "pandas>=3.0.6",
+    "pydantic>=2.13.5",
+    "pyyaml>=6.0.3",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.9",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, isort, pyupgrade, bugbear
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
