@@ -1,0 +1,1 @@
+{"complete":true,"scanners":{"whole_transcript":{"scans":16,"results":5,"errors":11,"validation":null,"metrics":null,"tokens":53156,"model_usage":{"anthropic/claude-opus-5":{"input_tokens":110,"output_tokens":3602,"total_tokens":53156,"input_tokens_cache_write":30544,"input_tokens_cache_read":18900,"reasoning_tokens":340,"total_cost":null}}}}}

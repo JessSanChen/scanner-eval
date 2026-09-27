@@ -1,0 +1,56 @@
+{
+  "scan_id": "3E46JzSiuDYQcJQQXRCi2t",
+  "scan_name": "scanner-eval",
+  "timestamp": "2026-09-27T11:29:48.782089-04:00",
+  "model": {
+    "model": "anthropic/claude-opus-5",
+    "config": {
+      "max_connections": 25
+    },
+    "args": {}
+  },
+  "revision": {
+    "type": "git",
+    "origin": "https://github.com/JessSanChen/scanner-eval.git",
+    "version": "0.0.0-dev.0+unknown",
+    "commit": "af4138b"
+  },
+  "packages": {
+    "inspect_ai": "0.3.271",
+    "inspect_scout": "0.5.3"
+  },
+  "options": {
+    "max_transcripts": 25
+  },
+  "transcripts": {
+    "type": "eval_log",
+    "filter": [],
+    "transcript_ids": {
+      "BGsi5qYBm8BqT9dn4eXB5X": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval",
+      "X27ZtmoCijgzSvmB6ukc5a": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval",
+      "PnecS4EXDygcPStpzvSCJg": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval",
+      "65zspqi4JqUdeECWgUeco2": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T14-14-11-00-00_persona-conversations_LBzxso9BdmUPTQveBRKQbF.eval",
+      "Eb8exjGsMtQ2BfF9ehLnt8": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-25-31-00-00_persona-conversations_oZ4T6BQz7Fvnp958w7K6AA.eval",
+      "gS5CYPYQ52STmh3G9vNctu": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-25-31-00-00_persona-conversations_oZ4T6BQz7Fvnp958w7K6AA.eval",
+      "bDJ3kzpESLwoQ4sfquF58x": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-25-35-00-00_persona-conversations_g8AvnoKtBaSZJMYiLoHqFk.eval",
+      "ZyJnVJtXcekLeEZ28jkHSd": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-25-35-00-00_persona-conversations_g8AvnoKtBaSZJMYiLoHqFk.eval",
+      "5Ed7Smo6Cop7YAHrSRTUgF": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-53-00-00_persona-conversations_c9Yiktnu9qeGPsUxFLsvbU.eval",
+      "b2HBrsRQ69BLxp5fwKTy34": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-53-00-00_persona-conversations_c9Yiktnu9qeGPsUxFLsvbU.eval",
+      "e33thnypTfWLVL7sCD5yaM": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-53-00-00_persona-conversations_c9Yiktnu9qeGPsUxFLsvbU.eval",
+      "BnuthHTD2axJ7aNQRouLLc": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-53-00-00_persona-conversations_c9Yiktnu9qeGPsUxFLsvbU.eval",
+      "NoSYmLvSatKzErACjaZRsU": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-58-00-00_persona-conversations_AcqYxBYZLhjF7XjPMNhxJB.eval",
+      "dnLRAZ3izMoizmYTQ5PpRH": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-58-00-00_persona-conversations_AcqYxBYZLhjF7XjPMNhxJB.eval",
+      "HRDMx5Aaaoeb2GiFy7csoE": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-58-00-00_persona-conversations_AcqYxBYZLhjF7XjPMNhxJB.eval",
+      "8Dc7iNGdK4w4UVPhmY6hC8": "/Users/jessicachen/Documents/_projects/scanner-eval/logs/perturbed/2026-09-27T15-27-58-00-00_persona-conversations_AcqYxBYZLhjF7XjPMNhxJB.eval"
+    },
+    "count": 0
+  },
+  "scanners": {
+    "whole_transcript": {
+      "name": "whole_transcript",
+      "version": 0,
+      "file": "src/trajscan/scanners.py",
+      "params": {}
+    }
+  }
+}
