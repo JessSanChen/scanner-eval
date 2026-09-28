@@ -61,3 +61,18 @@ def test_scripted_persona_sends_script_turns(
     assert user_turns == ["first line", "second line"]  # script length, not `turns`
     assert sample.metadata["user_source"] == "scripted"
     assert sample.metadata["turns_completed"] == 2
+
+
+def test_split_exchanges() -> None:
+    from trajscan.scanners import split_exchanges
+
+    messages = [
+        ChatMessageUser(content="u1"),
+        ChatMessageAssistant(content="a1"),
+        ChatMessageUser(content="u2"),
+        ChatMessageAssistant(content="a2"),
+        ChatMessageUser(content="u3"),  # unanswered (e.g. conversation cut short)
+    ]
+    exchanges = split_exchanges(messages)
+    assert [[m.text for m in ex] for ex in exchanges] == [["u1", "a1"], ["u2", "a2"], ["u3"]]
+    assert split_exchanges([]) == []

@@ -14,7 +14,7 @@ from inspect_scout import Transcript, transcripts_from
 # test follows the scanner if its declared content ever changes.
 from inspect_scout._scanner.scanner import config_for_scanner
 
-from trajscan.scanners import whole_transcript
+from trajscan.scanners import per_turn, whole_transcript
 from trajscan.schema import load_persona
 
 ROOT = Path(__file__).parent.parent
@@ -26,16 +26,20 @@ OBJECTIVES = [
 LOGS = [path for log_dir in LOG_DIRS for path in sorted(log_dir.glob("*.eval"))]
 
 
-async def _read_as_scanner(log: Path) -> list[Transcript]:
-    content = config_for_scanner(whole_transcript()).content
+SCANNERS = {"whole_transcript": whole_transcript, "per_turn": per_turn}
+
+
+async def _read_as_scanner(log: Path, scanner: str = "whole_transcript") -> list[Transcript]:
+    content = config_for_scanner(SCANNERS[scanner]()).content
     async with transcripts_from(str(log)).reader() as reader:
         return [await reader.read(info, content) async for info in reader.index()]
 
 
 @pytest.mark.skipif(not LOGS, reason="no committed logs")
+@pytest.mark.parametrize("scanner", SCANNERS)
 @pytest.mark.parametrize("log", LOGS, ids=lambda p: f"{p.parent.name}/{p.name[:19]}")
-def test_no_hidden_objective_in_scanner_input(log: Path) -> None:
-    for transcript in asyncio.run(_read_as_scanner(log)):
+def test_no_hidden_objective_in_scanner_input(log: Path, scanner: str) -> None:
+    for transcript in asyncio.run(_read_as_scanner(log, scanner)):
         visible = "\n".join(m.text for m in transcript.messages) + str(transcript.metadata)
         assert not [m for m in transcript.messages if m.role == "system"]
         for objective in OBJECTIVES:

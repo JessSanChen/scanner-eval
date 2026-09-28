@@ -1,0 +1,34 @@
+scanner,metric,estimate,ci_low,ci_high
+per_turn,coverage,0.515625,0.4375,0.59375
+per_turn,exact_accuracy,0.8181818181818182,0.7142857142857143,0.9285714285714286
+per_turn,within_one_accuracy,0.8787878787878788,0.8108108108108109,0.9643165024630542
+per_turn,mean_absolute_error,0.42424242424242425,0.1875,0.6388888888888888
+per_turn,quadratic_weighted_kappa,0.3595505617977528,0.1503606712376345,0.7048618386589837
+per_turn,category_macro_f1,0.7843137254901961,0.6307717917675545,0.9093406593406593
+per_turn,hard_negative_fpr_strict,0.0,0.0,0.0
+per_turn,hard_negative_review_burden,0.625,0.5416666666666666,0.6666666666666666
+per_turn,concerning_recall_strict,0.25,0.16666666666666666,0.3333333333333333
+per_turn,concerning_recall_failsafe,0.75,0.5833333333333334,0.9166666666666666
+per_turn,evidence_missing_rate,0.0,0.0,0.0
+whole_transcript,coverage,0.53125,0.453125,0.609375
+whole_transcript,exact_accuracy,0.6764705882352942,0.5897435897435898,0.7931034482758621
+whole_transcript,within_one_accuracy,0.9117647058823529,0.8499621212121212,1.0
+whole_transcript,mean_absolute_error,0.5,0.27263986013986014,0.6842105263157895
+whole_transcript,quadratic_weighted_kappa,0.20134228187919467,0.036588178207960426,0.6010758428119738
+whole_transcript,category_macro_f1,0.4426229508196721,0.41379310344827586,0.4727272727272727
+whole_transcript,hard_negative_fpr_strict,0.0,0.0,0.0
+whole_transcript,hard_negative_review_burden,0.5416666666666666,0.4166666666666667,0.6666666666666666
+whole_transcript,concerning_recall_strict,0.0,0.0,0.0
+whole_transcript,concerning_recall_failsafe,0.5833333333333334,0.4583333333333333,0.7083333333333334
+whole_transcript,evidence_missing_rate,,,
+per_turn - whole_transcript,coverage,-0.015625,-0.09375,0.078125
+per_turn - whole_transcript,exact_accuracy,0.14171122994652408,-0.0035376027481290747,0.2554798048251558
+per_turn - whole_transcript,within_one_accuracy,-0.03297682709447414,-0.09358706550802132,0.004639923536982431
+per_turn - whole_transcript,mean_absolute_error,-0.07575757575757575,-0.22600455569205566,0.13045640613323364
+per_turn - whole_transcript,quadratic_weighted_kappa,0.15820827991855813,-0.09736238547642037,0.33270926687039387
+per_turn - whole_transcript,category_macro_f1,0.34169077467052394,0.18856513816643122,0.4610752143769385
+per_turn - whole_transcript,hard_negative_fpr_strict,0.0,0.0,0.0
+per_turn - whole_transcript,hard_negative_review_burden,0.08333333333333337,-0.08333333333333337,0.24999999999999994
+per_turn - whole_transcript,concerning_recall_strict,0.25,0.16666666666666666,0.3333333333333333
+per_turn - whole_transcript,concerning_recall_failsafe,0.16666666666666663,0.04062500000000002,0.2916666666666667
+per_turn - whole_transcript,evidence_missing_rate,,,

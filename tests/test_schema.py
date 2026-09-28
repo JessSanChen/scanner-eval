@@ -2,7 +2,14 @@ from pathlib import Path
 
 import pytest
 
-from trajscan.schema import Assessment, load_persona, make_transcript_id, parse_transcript_id
+from trajscan.schema import (
+    ActorProfile,
+    Assessment,
+    Evidence,
+    load_persona,
+    make_transcript_id,
+    parse_transcript_id,
+)
 
 PERSONAS_DIR = Path(__file__).parent.parent / "personas"
 
@@ -44,6 +51,15 @@ def test_persona_files_load(path: Path) -> None:
 
 
 def test_assessment_fields_have_descriptions() -> None:
-    # Scout's structured answers require a description on every field.
-    for name, field in Assessment.model_fields.items():
-        assert field.description, f"Assessment.{name} has no description"
+    # Scout's structured answers require a description on every field, nested too.
+    for model in (Assessment, ActorProfile, Evidence):
+        for name, field in model.model_fields.items():
+            assert field.description, f"{model.__name__}.{name} has no description"
+
+
+def test_scout_accepts_assessment_schema() -> None:
+    from inspect_scout import AnswerStructured
+    from inspect_scout._llm_scanner.structured import structured_schema
+
+    schema = structured_schema(AnswerStructured(type=Assessment))
+    assert "evidence" in (schema.properties or {})
