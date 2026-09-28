@@ -217,3 +217,9 @@ A whole-transcript scan is the one-unit case.
 - **Scanner refusal depends on the prompt, not only the transcript.** On the *same* transcripts, the M3 rubric and schema changed whole-transcript refusal rates relative to the M4 scan: `biosafety_officer_auditor` 0% → 50%, `fragmenter` 25% → 62%, `journalist` 0% → 12%, `underfunded_lab_shortcut` 0% → 17%. Refusal rate must be re-measured whenever the scanner prompt changes.
 - **One parse failure** (`no_answer`) in 128 scans.
 - **Fragmentation remains untestable.** Concerning transcripts are 1 exchange long, so per-turn and whole-transcript see the same content for them.
+
+## 2026-09-28 — M5 blind self-labeling tool
+
+**Choice:** `python -m trajscan.label export` samples 3 base transcripts per persona (24; seed 0), shuffles them and assigns codes `L01`–`L24`. It writes the conversation text plus the scanner's own rubric to `labels/transcripts.md` and a blank `labels/labels.csv`. The code → transcript key goes to a separate file. `python -m trajscan.label score` reports self vs. ground truth (exact, within-one, QWK, category agreement) and self vs. each scanner.
+**Alternatives:** Label in `inspect view` (shows transcript IDs, which name the persona); label all 64 (more time, little extra value).
+**Why:** Codes hide the persona; the shared rubric puts self-labels and scanner outputs on the same scale. **Limit on blinding:** the author wrote the scripted personas and will recognize them. The sheet has a `recognized` column, and agreement is reported for recognized and unrecognized transcripts separately. Only the unrecognized group (mostly simulated personas) is a true blind check.
