@@ -10,3 +10,15 @@
   model: anthropic/claude-haiku-4-5
   where: task_id LIKE '%base'
   created: '2026-09-28T07:23:10+00:00'
+- scan: scans/scan_id=2RKgGg53z2rcWpjkFWswPv
+  model: openrouter/openai/gpt-6-sol
+  where: task_id LIKE '%base'
+  created: '2026-09-28T07:34:20+00:00'
+- scan: scans/scan_id=amKi4Y76izJHpa8HUNPi3X
+  model: openrouter/google/gemini-3.8-flash
+  where: task_id LIKE '%base'
+  created: '2026-09-28T07:55:06+00:00'
+- scan: scans/scan_id=D3JNK3KDsRj8fMPeHTv4BN
+  model: openrouter/openai/gpt-6-luna
+  where: task_id LIKE '%base'
+  created: '2026-09-28T08:08:20+00:00'

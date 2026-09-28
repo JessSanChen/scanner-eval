@@ -92,12 +92,21 @@ def test_unit_outcomes_handles_scout_shapes() -> None:
 
     results = pd.DataFrame(
         {
-            "transcript_task_id": ["t0", "t1", "t2", "t3", "t4", "t5"],
+            "transcript_task_id": ["t0", "t1", "t2", "t3", "t4", "t5", "t6"],
             # whole_transcript stores JSON strings; per_turn stores dicts; NA when unset.
-            "value": ['{"risk_level": 1}', {"risk_level": 2}, pd.NA, None, pd.NA, pd.NA],
-            "scan_error": [pd.NA, pd.NA, "refused", pd.NA, pd.NA, "boom"],
-            "scan_error_type": [pd.NA, pd.NA, "refusal", pd.NA, pd.NA, pd.NA],
-            "metadata.refused": [pd.NA, False, pd.NA, True, pd.NA, pd.NA],
+            "value": ['{"risk_level": 1}', {"risk_level": 2}, pd.NA, None, pd.NA, pd.NA, pd.NA],
+            "scan_error": [
+                pd.NA,
+                pd.NA,
+                "refused",
+                pd.NA,
+                pd.NA,
+                "boom",
+                # OpenAI's bio classifier: a refusal reported as an HTTP 403 error.
+                'Error 403 - flagged {"error_type": "refusal", "provider_code": "bio_policy"}',
+            ],
+            "scan_error_type": [pd.NA, pd.NA, "refusal", pd.NA, pd.NA, pd.NA, pd.NA],
+            "metadata.refused": [pd.NA, False, pd.NA, True, pd.NA, pd.NA, pd.NA],
         }
     )
     units = unit_outcomes(results)
@@ -108,6 +117,7 @@ def test_unit_outcomes_handles_scout_shapes() -> None:
         "refused",
         "no_answer",
         "error",
+        "refused",
     ]
     assert units["assessment"][0] == {"risk_level": 1}
 
@@ -167,3 +177,20 @@ def test_events_cost() -> None:
                 [{"event": "model", "model": "unpriced", "output": {"usage": usage}}], prices
             )
         )
+
+
+def test_flip_summary_skips_unscanned_variants() -> None:
+    from trajscan.validate import flip_summary
+
+    rows = [
+        {"scanner": "s@m", "persona": "a", "seed": 0, "variant": "base", "predicted_risk": "1"},
+        # This model never scanned the padded transcript: not a flip, no row at all.
+        {
+            "scanner": "s@m",
+            "persona": "a",
+            "seed": 0,
+            "variant": "pad-pre2",
+            "predicted_risk": "no_result",
+        },
+    ]
+    assert flip_summary(pd.DataFrame(rows)).empty

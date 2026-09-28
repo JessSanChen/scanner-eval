@@ -67,17 +67,23 @@ def refusal_heatmap(refusals: pd.DataFrame, path: Path) -> None:
     stages = ["simulator_refused", "target_refused"] + [
         c for c in df.columns if c.startswith("scanner_refused:")
     ]
+    # Group scanner columns by model; short labels like "opus-5 / per turn".
+    stages = stages[:2] + sorted(stages[2:], key=lambda c: (c.split("@")[-1], c))
     values = df[stages].to_numpy(dtype=float)
-    stage_names = ["User simulator", "Target"] + [
-        "Scanner:\n" + c.split(":", 1)[1].replace("_", " ").replace("@", "\n") for c in stages[2:]
-    ]
+
+    def _short(col: str) -> str:
+        scanner, _, model = col.split(":", 1)[1].partition("@")
+        name = model.split("/")[-1].removeprefix("claude-")
+        return f"{name}\n{'whole' if scanner == 'whole_transcript' else 'per turn'}"
+
+    stage_names = ["User\nsimulator", "Target"] + [_short(c) for c in stages[2:]]
     labels = [["n/a" if np.isnan(v) else f"{v:.0%}" for v in row] for row in values]
     rows = [
         f"{p} ({r}, {s})"
         for p, r, s in zip(df["persona"], df["true_risk"], df["user_source"], strict=True)
     ]
 
-    fig, ax = plt.subplots(figsize=(5.5 + 1.2 * len(stages), 4.4), facecolor=SURFACE)
+    fig, ax = plt.subplots(figsize=(5.5 + 1.15 * len(stages), 4.6), facecolor=SURFACE)
     _heatmap(ax, values, labels, rows, stage_names, vmax=1.0)
     ax.set_title(
         "Share of transcripts refused at each stage\n(persona, true risk, user source)",
@@ -142,63 +148,71 @@ SERIES = {"whole_transcript": ("#2a78d6", "o"), "per_turn": ("#eb6834", "s")}
 
 
 def cost_curve(metrics: pd.DataFrame, costs: pd.DataFrame, path: Path) -> None:
-    """Metric vs. cost per transcript for every scanner@model, one panel per metric.
+    """Metric by model, rows sorted by scan cost; one panel per metric.
 
-    Series = scanner (color + marker shape); points are labeled with the model,
-    so identity never depends on color alone.
+    Rows (models) carry identity by position and label, so color only encodes
+    the scanner (two validated hues, plus marker shape).
     """
     panels = [
-        ("concerning_recall_failsafe", "Concerning recall\n(flagged or refused)"),
+        ("concerning_recall_strict", "Concerning recall\n(flagged at risk \u2265 3)"),
         (
             "hard_negative_review_burden",
             "Hard-negative review burden\n(flagged or refused; lower is better)",
         ),
         ("category_macro_f1", "Threat-category macro-F1"),
     ]
-    fig, axes = plt.subplots(1, len(panels), figsize=(13, 4.2), facecolor=SURFACE)
+    split = pd.DataFrame(
+        [(k, *k.split("@", 1)) for k in costs.index], columns=["key", "scanner", "model"]
+    ).set_index("key")
+    per_model = costs.join(split).groupby("model")["mean_cost_per_transcript"].mean().sort_values()
+    models = list(per_model.index)
+    row_labels = [f"{m.split('/')[-1]}\n${per_model[m]:.4f}/transcript" for m in models]
+    offsets = {"whole_transcript": -0.15, "per_turn": 0.15}
+
+    fig, axes = plt.subplots(
+        1, len(panels), figsize=(13, 0.75 * len(models) + 1.8), sharey=True, facecolor=SURFACE
+    )
     for ax, (metric, label) in zip(axes, panels, strict=True):
-        for scanner_key in costs.index:
-            scanner, _, model = scanner_key.partition("@")
-            if (scanner_key, metric) not in metrics.index:
-                continue
-            color, marker = SERIES.get(scanner, (TEXT_SECONDARY, "^"))
-            row = metrics.loc[(scanner_key, metric)]
-            x = costs.loc[scanner_key, "mean_cost_per_transcript"]
-            ax.errorbar(
-                x,
-                row["estimate"],
-                yerr=[[row["estimate"] - row["ci_low"]], [row["ci_high"] - row["estimate"]]],
-                fmt=marker,
-                color=color,
-                ecolor=color,
-                elinewidth=1,
-                capsize=0,
-                markersize=8,
-                markeredgecolor=SURFACE,
-                markeredgewidth=2,
-            )
-            ax.annotate(
-                model.split("/")[-1],
-                (x, row["estimate"]),
-                xytext=(6, 4),
-                textcoords="offset points",
-                fontsize=7,
-                color=TEXT_SECONDARY,
-            )
-        ax.set_xscale("log")
-        ax.set_ylim(-0.05, 1.05)
+        for y, model in enumerate(models):
+            for scanner, (color, marker) in SERIES.items():
+                key = f"{scanner}@{model}"
+                if (key, metric) not in metrics.index:
+                    continue
+                row = metrics.loc[(key, metric)]
+                yy = y + offsets[scanner]
+                ax.plot([row["ci_low"], row["ci_high"]], [yy, yy], color=color, linewidth=1.5)
+                ax.plot(
+                    row["estimate"],
+                    yy,
+                    marker=marker,
+                    color=color,
+                    markersize=8,
+                    markeredgecolor=SURFACE,
+                    markeredgewidth=2,
+                    linestyle="",
+                )
+        ax.set_xlim(-0.05, 1.05)
+        ax.set_yticks(range(len(models)), row_labels, color=TEXT_SECONDARY, fontsize=8)
         ax.set_title(label, loc="left", color=TEXT_PRIMARY, fontsize=10)
-        ax.set_xlabel("Mean scan cost per transcript (USD, log scale)", color=TEXT_SECONDARY)
-        ax.grid(color="#e8e7e3", linewidth=0.6)
+        ax.grid(axis="x", color="#e8e7e3", linewidth=0.6)
         ax.set_axisbelow(True)
         ax.tick_params(colors=TEXT_SECONDARY, length=0)
         for spine in ax.spines.values():
             spine.set_visible(False)
+    axes[0].invert_yaxis()  # shared y: cheapest model on top
     handles = [
         plt.Line2D([], [], marker=m, color=c, linestyle="", markersize=8, label=s.replace("_", " "))
         for s, (c, m) in SERIES.items()
     ]
-    fig.legend(handles=handles, loc="upper right", frameon=False, fontsize=9)
-    fig.tight_layout(rect=(0, 0, 1, 0.93))
+    fig.legend(handles=handles, loc="upper right", frameon=False, fontsize=9, ncols=2)
+    fig.text(
+        0.01,
+        0.01,
+        "Rows sorted by mean scan cost per transcript (both scanners). "
+        "Lines: 95% bootstrap CI (seed-level; too narrow).",
+        color=TEXT_SECONDARY,
+        fontsize=8,
+    )
+    fig.tight_layout(rect=(0, 0.04, 1, 0.94))
     fig.savefig(path, dpi=200, facecolor=SURFACE)
     plt.close(fig)

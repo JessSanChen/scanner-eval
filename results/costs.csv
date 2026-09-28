@@ -1,3 +1,11 @@
 scanner,mean_cost_per_transcript,total_cost,n
-per_turn@anthropic/claude-opus-5,0.0,0.0,64
+per_turn@anthropic/claude-haiku-4-5,0.02741119112903226,1.69949385,64
+per_turn@anthropic/claude-opus-5,0.15836118548387096,9.818393499999999,64
+per_turn@openrouter/google/gemini-3.8-flash,0.014825431451612903,0.91917675,64
+per_turn@openrouter/openai/gpt-6-luna,0.0010127145161290324,0.0627883,64
+per_turn@openrouter/openai/gpt-6-sol,0.01902417741935484,1.179499,64
+whole_transcript@anthropic/claude-haiku-4-5,0.0103833453125,0.6645341,64
 whole_transcript@anthropic/claude-opus-5,0.068020515625,4.353313,64
+whole_transcript@openrouter/google/gemini-3.8-flash,0.00943107421875,0.60358875,64
+whole_transcript@openrouter/openai/gpt-6-luna,0.000532139453125,0.034056925,64
+whole_transcript@openrouter/openai/gpt-6-sol,0.0103332890625,0.6613305,64

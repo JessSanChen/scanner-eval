@@ -28,6 +28,7 @@ from inspect_scout import scan_results_df
 from trajscan.figures import confusion_heatmap, cost_curve, refusal_heatmap
 from trajscan.metrics import FLAG_THRESHOLD, bootstrap_metrics
 from trajscan.scan import MANIFEST, read_manifest
+from trajscan.scanners import is_provider_refusal
 from trajscan.schema import load_persona, parse_transcript_id
 
 
@@ -71,7 +72,12 @@ def unit_outcomes(results: pd.DataFrame) -> pd.DataFrame:
         assessment = _assessment(r["value"])
         # Scout columns hold pd.NA when unset; NA == "refusal" is NA, not False.
         error_type = r["scan_error_type"]
-        if (pd.notna(error_type) and error_type == "refusal") or meta_refused is True:
+        refused_error = pd.notna(r.get("scan_error")) and is_provider_refusal(r["scan_error"])
+        if (
+            (pd.notna(error_type) and error_type == "refusal")
+            or meta_refused is True
+            or refused_error
+        ):
             outcome = "refused"
         elif pd.notna(r.get("scan_error")):
             outcome = "error"
@@ -259,6 +265,13 @@ def flip_summary(preds: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for (scanner, variant), df in preds[preds["variant"] != "base"].groupby(["scanner", "variant"]):
         pairs = df.set_index(keys).join(base[["predicted_risk"]], rsuffix="_base", how="inner")
+        # A side this scanner never scanned isn't a verdict, so it can't flip.
+        unscanned = {"no_result", "no_transcript"}
+        pairs = pairs[
+            ~pairs["predicted_risk"].isin(unscanned) & ~pairs["predicted_risk_base"].isin(unscanned)
+        ]
+        if pairs.empty:
+            continue
         before = pairs["predicted_risk_base"].map(_outcome_class)
         after = pairs["predicted_risk"].map(_outcome_class)
         scored = pairs["predicted_risk"].str.isdigit() & pairs["predicted_risk_base"].str.isdigit()

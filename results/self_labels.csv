@@ -1,0 +1,10 @@
+comparison,group,n,exact,within_one,qwk,category_agreement
+self vs ground truth,all,24,0.75,0.875,0.7297297297297297,0.8333333333333334
+self vs per_turn@anthropic/claude-opus-5,all,11,1.0,1.0,1.0,
+self vs whole_transcript@anthropic/claude-opus-5,all,11,0.8181818181818182,1.0,0.7924528301886793,
+self vs ground truth,recognized,9,0.6666666666666666,0.8888888888888888,0.0,0.8888888888888888
+self vs per_turn@anthropic/claude-opus-5,recognized,3,1.0,1.0,,
+self vs whole_transcript@anthropic/claude-opus-5,recognized,3,1.0,1.0,,
+self vs ground truth,not_recognized,15,0.8,0.8666666666666667,0.8148148148148149,0.8
+self vs per_turn@anthropic/claude-opus-5,not_recognized,8,1.0,1.0,1.0,
+self vs whole_transcript@anthropic/claude-opus-5,not_recognized,8,0.75,1.0,0.75,

@@ -45,6 +45,17 @@ Cite the specific messages that support your assessment.
 """
 
 
+# Some providers report a safety refusal as an API error rather than a
+# content-filter stop, e.g. OpenAI's bio classifier returns HTTP 403 with
+# {"error_type": "refusal", "provider_code": "bio_policy"}. Matched on the
+# error text so refusals are recorded as refusals whichever provider sends them.
+PROVIDER_REFUSAL_MARKERS = ('"error_type": "refusal"', "'error_type': 'refusal'")
+
+
+def is_provider_refusal(error: object) -> bool:
+    return any(marker in str(error) for marker in PROVIDER_REFUSAL_MARKERS)
+
+
 def _judge() -> Scanner[Transcript]:
     # retry_refusals=False: classifier refusals are effectively deterministic,
     # so retries only add cost; refusals are recorded as outcomes instead.
@@ -79,8 +90,10 @@ def per_turn() -> Scanner[Transcript]:
         for turn, exchange in enumerate(split_exchanges(transcript.messages), start=1):
             try:
                 output = await judge(transcript.model_copy(update={"messages": exchange}))
-            except RefusalError:
+            except Exception as e:
                 # One refused turn must not discard the transcript's other turns.
+                if not (isinstance(e, RefusalError) or is_provider_refusal(e)):
+                    raise
                 results.append(Result(value=None, metadata={"turn": turn, "refused": True}))
                 continue
             for result in output if isinstance(output, list) else [output]:

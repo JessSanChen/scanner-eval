@@ -1,4 +1,15 @@
 scanner,metric,estimate,ci_low,ci_high
+per_turn@anthropic/claude-haiku-4-5,coverage,0.96875,0.9375,1.0
+per_turn@anthropic/claude-haiku-4-5,exact_accuracy,0.6451612903225806,0.5713095238095238,0.7213114754098361
+per_turn@anthropic/claude-haiku-4-5,within_one_accuracy,0.7903225806451613,0.7287383816293056,0.85
+per_turn@anthropic/claude-haiku-4-5,mean_absolute_error,0.7419354838709677,0.6031746031746031,0.8833811475409835
+per_turn@anthropic/claude-haiku-4-5,quadratic_weighted_kappa,0.33333333333333337,0.22157263420768308,0.4487664055521198
+per_turn@anthropic/claude-haiku-4-5,category_macro_f1,0.7343941248470012,0.6590972806279787,0.8011477761836442
+per_turn@anthropic/claude-haiku-4-5,hard_negative_fpr_strict,0.125,0.041666666666666664,0.25
+per_turn@anthropic/claude-haiku-4-5,hard_negative_review_burden,0.125,0.041666666666666664,0.25
+per_turn@anthropic/claude-haiku-4-5,concerning_recall_strict,0.5,0.375,0.625
+per_turn@anthropic/claude-haiku-4-5,concerning_recall_failsafe,0.5,0.375,0.625
+per_turn@anthropic/claude-haiku-4-5,evidence_missing_rate,0.0,0.0,0.0
 per_turn@anthropic/claude-opus-5,coverage,0.515625,0.4375,0.59375
 per_turn@anthropic/claude-opus-5,exact_accuracy,0.8181818181818182,0.7142857142857143,0.9285714285714286
 per_turn@anthropic/claude-opus-5,within_one_accuracy,0.8787878787878788,0.8108108108108109,0.9643165024630542
@@ -10,6 +21,50 @@ per_turn@anthropic/claude-opus-5,hard_negative_review_burden,0.625,0.54166666666
 per_turn@anthropic/claude-opus-5,concerning_recall_strict,0.25,0.16666666666666666,0.3333333333333333
 per_turn@anthropic/claude-opus-5,concerning_recall_failsafe,0.75,0.5833333333333334,0.9166666666666666
 per_turn@anthropic/claude-opus-5,evidence_missing_rate,0.0,0.0,0.0
+per_turn@openrouter/google/gemini-3.8-flash,coverage,0.96875,0.9375,1.0
+per_turn@openrouter/google/gemini-3.8-flash,exact_accuracy,0.7258064516129032,0.6885245901639344,0.75
+per_turn@openrouter/google/gemini-3.8-flash,within_one_accuracy,0.8709677419354839,0.8666666666666667,0.875
+per_turn@openrouter/google/gemini-3.8-flash,mean_absolute_error,0.532258064516129,0.5,0.5737704918032787
+per_turn@openrouter/google/gemini-3.8-flash,quadratic_weighted_kappa,0.47893753890848734,0.45033112582781454,0.5
+per_turn@openrouter/google/gemini-3.8-flash,category_macro_f1,0.8434343434343434,0.8295454545454546,0.8545454545454545
+per_turn@openrouter/google/gemini-3.8-flash,hard_negative_fpr_strict,0.0,0.0,0.0
+per_turn@openrouter/google/gemini-3.8-flash,hard_negative_review_burden,0.0,0.0,0.0
+per_turn@openrouter/google/gemini-3.8-flash,concerning_recall_strict,0.5833333333333334,0.5,0.6666666666666666
+per_turn@openrouter/google/gemini-3.8-flash,concerning_recall_failsafe,0.5833333333333334,0.5,0.6666666666666666
+per_turn@openrouter/google/gemini-3.8-flash,evidence_missing_rate,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-luna,coverage,0.921875,0.859375,0.96875
+per_turn@openrouter/openai/gpt-6-luna,exact_accuracy,0.6440677966101694,0.5737704918032787,0.7167324561403509
+per_turn@openrouter/openai/gpt-6-luna,within_one_accuracy,0.7627118644067796,0.7049180327868853,0.8214285714285714
+per_turn@openrouter/openai/gpt-6-luna,mean_absolute_error,0.7288135593220338,0.6206896551724138,0.8333333333333334
+per_turn@openrouter/openai/gpt-6-luna,quadratic_weighted_kappa,0.34010207405798676,0.2497575740813377,0.43312377585373385
+per_turn@openrouter/openai/gpt-6-luna,category_macro_f1,0.5061640587956378,0.4670841694297741,0.5428505428505429
+per_turn@openrouter/openai/gpt-6-luna,hard_negative_fpr_strict,0.16666666666666666,0.041666666666666664,0.2916666666666667
+per_turn@openrouter/openai/gpt-6-luna,hard_negative_review_burden,0.2916666666666667,0.20833333333333334,0.3333333333333333
+per_turn@openrouter/openai/gpt-6-luna,concerning_recall_strict,0.5833333333333334,0.5,0.6666666666666666
+per_turn@openrouter/openai/gpt-6-luna,concerning_recall_failsafe,0.5833333333333334,0.5,0.6666666666666666
+per_turn@openrouter/openai/gpt-6-luna,evidence_missing_rate,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-sol,coverage,0.953125,0.90625,1.0
+per_turn@openrouter/openai/gpt-6-sol,exact_accuracy,0.5573770491803278,0.4838709677419355,0.6333730158730158
+per_turn@openrouter/openai/gpt-6-sol,within_one_accuracy,0.8360655737704918,0.7931034482758621,0.8709677419354839
+per_turn@openrouter/openai/gpt-6-sol,mean_absolute_error,0.7377049180327869,0.640625,0.8333333333333334
+per_turn@openrouter/openai/gpt-6-sol,quadratic_weighted_kappa,0.37459042384525953,0.29521836695478015,0.44688856729377713
+per_turn@openrouter/openai/gpt-6-sol,category_macro_f1,0.545903045903046,0.5186198470351997,0.8482252141982864
+per_turn@openrouter/openai/gpt-6-sol,hard_negative_fpr_strict,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-sol,hard_negative_review_burden,0.041666666666666664,0.0,0.125
+per_turn@openrouter/openai/gpt-6-sol,concerning_recall_strict,0.5833333333333334,0.5,0.6666666666666666
+per_turn@openrouter/openai/gpt-6-sol,concerning_recall_failsafe,0.5833333333333334,0.5,0.6666666666666666
+per_turn@openrouter/openai/gpt-6-sol,evidence_missing_rate,0.0,0.0,0.0
+whole_transcript@anthropic/claude-haiku-4-5,coverage,0.953125,0.90625,1.0
+whole_transcript@anthropic/claude-haiku-4-5,exact_accuracy,0.6229508196721312,0.5714285714285714,0.6779661016949152
+whole_transcript@anthropic/claude-haiku-4-5,within_one_accuracy,0.7049180327868853,0.6557377049180327,0.7580645161290323
+whole_transcript@anthropic/claude-haiku-4-5,mean_absolute_error,0.8360655737704918,0.7333035714285714,0.9365079365079365
+whole_transcript@anthropic/claude-haiku-4-5,quadratic_weighted_kappa,0.2703211830083828,0.18604218898590819,0.35660750938957914
+whole_transcript@anthropic/claude-haiku-4-5,category_macro_f1,0.42676767676767674,0.40281857499554125,0.673794853207684
+whole_transcript@anthropic/claude-haiku-4-5,hard_negative_fpr_strict,0.16666666666666666,0.041666666666666664,0.2916666666666667
+whole_transcript@anthropic/claude-haiku-4-5,hard_negative_review_burden,0.16666666666666666,0.041666666666666664,0.2916666666666667
+whole_transcript@anthropic/claude-haiku-4-5,concerning_recall_strict,0.3333333333333333,0.3333333333333333,0.3333333333333333
+whole_transcript@anthropic/claude-haiku-4-5,concerning_recall_failsafe,0.3333333333333333,0.3333333333333333,0.3333333333333333
+whole_transcript@anthropic/claude-haiku-4-5,evidence_missing_rate,0.0,0.0,0.0
 whole_transcript@anthropic/claude-opus-5,coverage,0.53125,0.453125,0.609375
 whole_transcript@anthropic/claude-opus-5,exact_accuracy,0.6764705882352942,0.5897435897435898,0.7931034482758621
 whole_transcript@anthropic/claude-opus-5,within_one_accuracy,0.9117647058823529,0.8499621212121212,1.0
@@ -21,6 +76,50 @@ whole_transcript@anthropic/claude-opus-5,hard_negative_review_burden,0.541666666
 whole_transcript@anthropic/claude-opus-5,concerning_recall_strict,0.0,0.0,0.0
 whole_transcript@anthropic/claude-opus-5,concerning_recall_failsafe,0.5833333333333334,0.4583333333333333,0.7083333333333334
 whole_transcript@anthropic/claude-opus-5,evidence_missing_rate,,,
+whole_transcript@openrouter/google/gemini-3.8-flash,coverage,0.96875,0.9375,1.0
+whole_transcript@openrouter/google/gemini-3.8-flash,exact_accuracy,0.7258064516129032,0.6935483870967742,0.746031746031746
+whole_transcript@openrouter/google/gemini-3.8-flash,within_one_accuracy,0.8548387096774194,0.8225806451612904,0.873015873015873
+whole_transcript@openrouter/google/gemini-3.8-flash,mean_absolute_error,0.5483870967741935,0.5079365079365079,0.6129032258064516
+whole_transcript@openrouter/google/gemini-3.8-flash,quadratic_weighted_kappa,0.4677023712183156,0.42360549717057405,0.4951923076923077
+whole_transcript@openrouter/google/gemini-3.8-flash,category_macro_f1,0.8208667736757624,0.7728937728937728,0.8492822966507176
+whole_transcript@openrouter/google/gemini-3.8-flash,hard_negative_fpr_strict,0.0,0.0,0.0
+whole_transcript@openrouter/google/gemini-3.8-flash,hard_negative_review_burden,0.0,0.0,0.0
+whole_transcript@openrouter/google/gemini-3.8-flash,concerning_recall_strict,0.5416666666666666,0.4572916666666667,0.625
+whole_transcript@openrouter/google/gemini-3.8-flash,concerning_recall_failsafe,0.5416666666666666,0.4572916666666667,0.625
+whole_transcript@openrouter/google/gemini-3.8-flash,evidence_missing_rate,0.0,0.0,0.0
+whole_transcript@openrouter/openai/gpt-6-luna,coverage,0.953125,0.90625,1.0
+whole_transcript@openrouter/openai/gpt-6-luna,exact_accuracy,0.7213114754098361,0.6721311475409836,0.7704918032786885
+whole_transcript@openrouter/openai/gpt-6-luna,within_one_accuracy,0.8524590163934426,0.819672131147541,0.873015873015873
+whole_transcript@openrouter/openai/gpt-6-luna,mean_absolute_error,0.5573770491803278,0.5079365079365079,0.6166666666666667
+whole_transcript@openrouter/openai/gpt-6-luna,quadratic_weighted_kappa,0.4527979495941906,0.4033353842737168,0.4935072442008859
+whole_transcript@openrouter/openai/gpt-6-luna,category_macro_f1,0.5333333333333333,0.4995702155155781,0.8296461295161079
+whole_transcript@openrouter/openai/gpt-6-luna,hard_negative_fpr_strict,0.041666666666666664,0.0,0.125
+whole_transcript@openrouter/openai/gpt-6-luna,hard_negative_review_burden,0.08333333333333333,0.0,0.20833333333333334
+whole_transcript@openrouter/openai/gpt-6-luna,concerning_recall_strict,0.5833333333333334,0.5,0.6666666666666666
+whole_transcript@openrouter/openai/gpt-6-luna,concerning_recall_failsafe,0.5833333333333334,0.5,0.6666666666666666
+whole_transcript@openrouter/openai/gpt-6-luna,evidence_missing_rate,0.0,0.0,0.0
+whole_transcript@openrouter/openai/gpt-6-sol,coverage,0.953125,0.90625,1.0
+whole_transcript@openrouter/openai/gpt-6-sol,exact_accuracy,0.6721311475409836,0.6101694915254238,0.7258064516129032
+whole_transcript@openrouter/openai/gpt-6-sol,within_one_accuracy,0.8688524590163934,0.8620689655172413,0.875
+whole_transcript@openrouter/openai/gpt-6-sol,mean_absolute_error,0.5901639344262295,0.532258064516129,0.6557377049180327
+whole_transcript@openrouter/openai/gpt-6-sol,quadratic_weighted_kappa,0.41666666666666663,0.3329261297763024,0.47322196799604227
+whole_transcript@openrouter/openai/gpt-6-sol,category_macro_f1,0.8368983957219251,0.8116883116883117,0.8545454545454545
+whole_transcript@openrouter/openai/gpt-6-sol,hard_negative_fpr_strict,0.0,0.0,0.0
+whole_transcript@openrouter/openai/gpt-6-sol,hard_negative_review_burden,0.0,0.0,0.0
+whole_transcript@openrouter/openai/gpt-6-sol,concerning_recall_strict,0.5416666666666666,0.4166666666666667,0.6666666666666666
+whole_transcript@openrouter/openai/gpt-6-sol,concerning_recall_failsafe,0.5833333333333334,0.5,0.6666666666666666
+whole_transcript@openrouter/openai/gpt-6-sol,evidence_missing_rate,0.0,0.0,0.0
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,coverage,0.015625,0.0,0.046875
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,exact_accuracy,0.022210470650449454,-0.078125,0.11639929545654847
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,within_one_accuracy,0.085404547858276,0.020888418826017996,0.1428571428571429
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,mean_absolute_error,-0.0941300898995241,-0.23811059907834106,0.06252480158730156
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,quadratic_weighted_kappa,0.06301215032495056,-0.0351099437363332,0.15787343230509718
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,category_macro_f1,0.30762644807932443,0.04954283778974206,0.36281049559606326
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,hard_negative_fpr_strict,-0.04166666666666666,-0.125,0.0
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,hard_negative_review_burden,-0.04166666666666666,-0.125,0.0
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,concerning_recall_strict,0.16666666666666669,0.041666666666666685,0.2916666666666667
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,concerning_recall_failsafe,0.16666666666666669,0.041666666666666685,0.2916666666666667
+per_turn@anthropic/claude-haiku-4-5 - whole_transcript@anthropic/claude-haiku-4-5,evidence_missing_rate,0.0,0.0,0.0
 per_turn@anthropic/claude-opus-5 - whole_transcript@anthropic/claude-opus-5,coverage,-0.015625,-0.09375,0.078125
 per_turn@anthropic/claude-opus-5 - whole_transcript@anthropic/claude-opus-5,exact_accuracy,0.14171122994652408,-0.0035376027481290747,0.2554798048251558
 per_turn@anthropic/claude-opus-5 - whole_transcript@anthropic/claude-opus-5,within_one_accuracy,-0.03297682709447414,-0.09358706550802132,0.004639923536982431
@@ -32,3 +131,36 @@ per_turn@anthropic/claude-opus-5 - whole_transcript@anthropic/claude-opus-5,hard
 per_turn@anthropic/claude-opus-5 - whole_transcript@anthropic/claude-opus-5,concerning_recall_strict,0.25,0.16666666666666666,0.3333333333333333
 per_turn@anthropic/claude-opus-5 - whole_transcript@anthropic/claude-opus-5,concerning_recall_failsafe,0.16666666666666663,0.04062500000000002,0.2916666666666667
 per_turn@anthropic/claude-opus-5 - whole_transcript@anthropic/claude-opus-5,evidence_missing_rate,,,
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,coverage,0.0,0.0,0.0
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,exact_accuracy,0.0,-0.047638248847926314,0.046875
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,within_one_accuracy,0.016129032258064502,0.0,0.048387096774193505
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,mean_absolute_error,-0.016129032258064502,-0.09523809523809523,0.033347457627118625
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,quadratic_weighted_kappa,0.011235167690171743,-0.023587824452407518,0.06544024157660533
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,category_macro_f1,0.022567569758580985,0.0,0.07054057054057061
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,hard_negative_fpr_strict,0.0,0.0,0.0
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,hard_negative_review_burden,0.0,0.0,0.0
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,concerning_recall_strict,0.04166666666666674,0.0,0.12500000000000006
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,concerning_recall_failsafe,0.04166666666666674,0.0,0.12500000000000006
+per_turn@openrouter/google/gemini-3.8-flash - whole_transcript@openrouter/google/gemini-3.8-flash,evidence_missing_rate,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,coverage,-0.03125,-0.078125,0.0
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,exact_accuracy,-0.07724367879966665,-0.15622881355932203,0.008285090038687251
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,within_one_accuracy,-0.08974715198666294,-0.15170439760603693,-0.03516657852987837
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,mean_absolute_error,0.17143651014170602,0.07125000000000006,0.27780054644808744
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,quadratic_weighted_kappa,-0.11269587553620386,-0.2021736469262751,-0.03238640712955255
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,category_macro_f1,-0.027169274537695576,-0.30858487603107404,0.011686974331209543
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,hard_negative_fpr_strict,0.125,0.0,0.25
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,hard_negative_review_burden,0.20833333333333337,0.08333333333333334,0.2916666666666667
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,concerning_recall_strict,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,concerning_recall_failsafe,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-luna - whole_transcript@openrouter/openai/gpt-6-luna,evidence_missing_rate,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,coverage,0.0,-0.03125,0.03125
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,exact_accuracy,-0.11475409836065575,-0.190502537080406,-0.0428289810547876
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,within_one_accuracy,-0.032786885245901565,-0.07525144829286332,0.00198572708653353
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,mean_absolute_error,0.14754098360655743,0.07451222481979348,0.21883064516129025
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,quadratic_weighted_kappa,-0.042076242821407095,-0.10893850939425202,0.03508007149624318
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,category_macro_f1,-0.2909953498188792,-0.3135970469410777,0.007352941176470562
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,hard_negative_fpr_strict,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,hard_negative_review_burden,0.041666666666666664,0.0,0.125
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,concerning_recall_strict,0.04166666666666674,0.0,0.12500000000000006
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,concerning_recall_failsafe,0.0,0.0,0.0
+per_turn@openrouter/openai/gpt-6-sol - whole_transcript@openrouter/openai/gpt-6-sol,evidence_missing_rate,0.0,0.0,0.0

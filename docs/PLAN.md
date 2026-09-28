@@ -1,5 +1,7 @@
 # trajscan — project plan
 
+> **Status (2026-09-28):** this is the original plan. What was built, what changed and why are in `DECISIONS.md`; results are in `FINDINGS.md`.
+
 ## Context
 
 This is a work sample for the Cambridge Boston Alignment Initiative (CBAI), applying to a RAND stream mentored by **Sunishchal Dev** (AI evaluation research scientist, ML engineering lead) and **Jeffrey Lee** (AI biosecurity research scientist, biology SME). The stream's focus is automated scanning of model conversation logs: generate multi-turn conversations around dual-use biology research using different personas and objectives, then characterize the logs — nature of the threat, a description of the actor, a risk level — and compare against the original personas and objectives.
