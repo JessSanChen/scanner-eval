@@ -1,6 +1,7 @@
 from typing import Any
 
 import pandas as pd
+import pytest
 
 from trajscan.validate import aggregate, refusal_summary
 
@@ -109,3 +110,60 @@ def test_unit_outcomes_handles_scout_shapes() -> None:
         "error",
     ]
     assert units["assessment"][0] == {"risk_level": 1}
+
+
+def test_flip_summary() -> None:
+    from trajscan.validate import flip_summary
+
+    rows = []
+    # (persona, seed, base outcome, padded outcome)
+    for persona, seed, before, after in [
+        ("a", 0, "1", "1"),  # no flip
+        ("a", 1, "2", "4"),  # unflagged -> flagged, shift +2
+        ("b", 0, "refused", "1"),  # refusal flip
+        ("b", 1, "refused", "refused"),  # no flip
+    ]:
+        for variant, outcome in [("base", before), ("pad-pre2", after)]:
+            rows.append(
+                {
+                    "scanner": "s@m",
+                    "persona": persona,
+                    "seed": seed,
+                    "variant": variant,
+                    "predicted_risk": outcome,
+                }
+            )
+    flips = flip_summary(pd.DataFrame(rows)).iloc[0]
+    assert flips["n_pairs"] == 4
+    assert flips["flip_rate"] == 0.5
+    assert flips["flag_flip_rate"] == 0.25
+    assert flips["refusal_flip_rate"] == 0.25
+    assert flips["mean_risk_shift"] == 1.0  # pairs scored on both sides: 0 and +2
+
+
+def test_events_cost() -> None:
+    import math
+
+    from trajscan.validate import events_cost
+
+    prices = {"m": {"input": 1.0, "output": 10.0, "cache_write": 1.25, "cache_read": 0.1}}
+    usage = {
+        "input_tokens": 1_000_000,
+        "output_tokens": 100_000,
+        "input_tokens_cache_write": 0,
+        "input_tokens_cache_read": 1_000_000,
+    }
+    events = [
+        {"event": "model", "model": "m", "output": {"usage": usage}},
+        {"event": "model", "model": "m", "output": {"usage": usage}},
+        {"event": "tool"},  # ignored
+    ]
+    # Per call: 1.0 (input) + 1.0 (output) + 0.1 (cache read) = 2.1
+    assert math.isclose(events_cost(events, prices), 4.2)
+    assert events_cost([], prices) == 0.0
+    with pytest.warns(UserWarning):
+        assert math.isnan(
+            events_cost(
+                [{"event": "model", "model": "unpriced", "output": {"usage": usage}}], prices
+            )
+        )

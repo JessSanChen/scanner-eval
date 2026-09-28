@@ -1,0 +1,10 @@
+# Scanner models for `python -m trajscan.scan`. Every scanner in
+# src/trajscan/scanners.py runs once per model, on the same transcripts.
+# Any Inspect model string works (anthropic/..., openrouter/<vendor>/<model>,
+# openai/..., ...); add a matching entry to configs/prices.yaml for cost curves.
+models:
+  - anthropic/claude-opus-5
+  - anthropic/claude-haiku-4-5
+  - openrouter/openai/gpt-6-sol
+  - openrouter/google/gemini-3.8-flash
+  - openrouter/openai/gpt-6-luna

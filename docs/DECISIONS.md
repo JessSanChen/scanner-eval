@@ -223,3 +223,41 @@ A whole-transcript scan is the one-unit case.
 **Choice:** `python -m trajscan.label export` samples 3 base transcripts per persona (24; seed 0), shuffles them and assigns codes `L01`–`L24`. It writes the conversation text plus the scanner's own rubric to `labels/transcripts.md` and a blank `labels/labels.csv`. The code → transcript key goes to a separate file. `python -m trajscan.label score` reports self vs. ground truth (exact, within-one, QWK, category agreement) and self vs. each scanner.
 **Alternatives:** Label in `inspect view` (shows transcript IDs, which name the persona); label all 64 (more time, little extra value).
 **Why:** Codes hide the persona; the shared rubric puts self-labels and scanner outputs on the same scale. **Limit on blinding:** the author wrote the scripted personas and will recognize them. The sheet has a `recognized` column, and agreement is reported for recognized and unrecognized transcripts separately. Only the unrecognized group (mostly simulated personas) is a true blind check.
+
+## 2026-09-28 — M6: benign padding perturbations, flip rates
+
+**Choice:** `perturb.py` adds `pad-pre2` and `pad-post2`: 2 benign exchanges inserted before or after each non-empty transcript. They come from refusal-free `diagnostic_lab_tech` conversations, never from the sample itself, chosen deterministically per transcript ID.
+- Variants get new sample UUIDs (Scout keys transcripts by UUID) and have their recorded events cleared (the events describe the original conversation).
+- Validation computes headline metrics on `base` only, and reports per perturbation × scanner: flip rate (any change of outcome class: flagged / unflagged / refused / other), flag flips, refusal flips and mean risk shift.
+
+**Alternatives / extensions:** LLM style rewrites (non-native, terse, formal), which need model calls and are likely refused on concerning personas; moving or removing planted markers, which needs planted markers. Deferred and noted in `perturb.py`.
+**Why:** Padding is deterministic, free and can't be refused. It directly tests dilution in long mixed logs, which the M3 results suggested matters.
+
+**Scans:** padded transcripts only (`-F "task_id LIKE '%pad-%'"`, 124 transcripts), scan `KRdzA2rJYxLqJCEjwd56Vb`, Opus 5.
+**Results:**
+
+| Scanner | Perturbation | Flip rate | Flag flips | Refusal flips | Mean risk shift |
+|---|---|---|---|---|---|
+| whole_transcript | pad-pre2 | 0.19 | 0.05 | 0.15 | +0.15 |
+| whole_transcript | pad-post2 | 0.23 | 0.00 | 0.19 | +0.13 |
+| per_turn | pad-pre2 | 0.11 | 0.05 | 0.11 | +0.10 |
+| per_turn | pad-post2 | 0.10 | 0.02 | 0.08 | +0.03 |
+
+The verdict should never change, so every flip is an error. Whole-transcript scanning is about twice as unstable under benign padding, mostly because padding changes whether it refuses. Per-turn is steadier, since each original exchange is still scanned alone. The padded turns can add refusals of their own.
+
+## 2026-09-28 — Cost from scan events, not `scan_model_usage`
+
+**Choice:** Cost per transcript is summed over the model calls in the scan's recorded events, priced with `configs/prices.yaml`.
+**Why:** Scout fills `scan_model_usage` only for single-result scanners, so per-turn scans showed $0. Every result row carries its invocation's events, so one row per transcript is priced. Cross-check on whole-transcript: events-based $4.3533 = Scout usage $4.3533. Per-turn costs about 2.3× whole-transcript on Opus 5 ($0.158 vs. $0.068 per transcript).
+
+## 2026-09-28 — M7 harness: scanner × model variants, scan runner, manifest, prices
+
+**Choice:**
+- A scanner variant is `scanner@model`.
+- `python -m trajscan.scan` runs every scanner in `scanners.SCANNERS` against every model in `configs/scan.yaml` (or `--models`), filtered by `--where` (default: base transcripts). Each completed scan is appended to `scans/manifest.yaml`.
+- `validate` reads the manifest by default, combines scans per variant, and fails loudly if one transcript appears in two scans under the same variant.
+- Prices in `configs/prices.yaml` (USD per million tokens, sourced and dated).
+- Added the `openai` package, which Inspect's OpenRouter provider requires.
+**Alternatives:** Scout's own scan-job YAML (it doesn't record which scans form an analysis); fetching live prices (not reproducible).
+**Why:** Any Inspect model string works (Anthropic, OpenRouter, OpenAI and others), so adding a model is one config line plus a price row. Outcomes that differ by provider, such as a plain-text refusal with no tool call, already map to `no_answer`.
+**Extension:** open-weight models (e.g. Qwen, Llama) through OpenRouter or a local server, as further scanner variants.

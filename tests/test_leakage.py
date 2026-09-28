@@ -14,7 +14,7 @@ from inspect_scout import Transcript, transcripts_from
 # test follows the scanner if its declared content ever changes.
 from inspect_scout._scanner.scanner import config_for_scanner
 
-from trajscan.scanners import per_turn, whole_transcript
+from trajscan.scanners import SCANNERS
 from trajscan.schema import load_persona
 
 ROOT = Path(__file__).parent.parent
@@ -24,9 +24,6 @@ OBJECTIVES = [
     for path in (ROOT / "personas").glob("*.yaml")
 ]
 LOGS = [path for log_dir in LOG_DIRS for path in sorted(log_dir.glob("*.eval"))]
-
-
-SCANNERS = {"whole_transcript": whole_transcript, "per_turn": per_turn}
 
 
 async def _read_as_scanner(log: Path, scanner: str = "whole_transcript") -> list[Transcript]:

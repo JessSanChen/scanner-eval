@@ -13,20 +13,33 @@ A small, reproducible harness for evaluating LLM scanners of conversation logs a
 Each stage is one command that reads files and writes files:
 
 ```
+# 1. generate: persona conversations -> logs/raw/*.eval
 uv run inspect eval src/trajscan/generate.py --model anthropic/claude-sonnet-5 \
     --model-role user_simulator=anthropic/claude-sonnet-5 -T seeds=8 --log-dir logs/raw
-uv run python -m trajscan.perturb                      # logs/raw -> logs/perturbed
-uv run scout scan src/trajscan/scanners.py -T logs/perturbed --scans scans \
-    --model anthropic/claude-opus-5
-uv run python -m trajscan.validate                     # -> results/, figures/
+# 2. perturb: base + label-preserving variants (benign padding) -> logs/perturbed
+uv run python -m trajscan.perturb
+# 3. scan: every scanner x every model in configs/scan.yaml -> scans/, scans/manifest.yaml
+uv run python -m trajscan.scan                                    # base transcripts
+uv run python -m trajscan.scan --models anthropic/claude-opus-5 --where "task_id LIKE '%pad-%'"
+# 4. validate: metrics, flip rates, costs, figures -> results/, figures/
+uv run python -m trajscan.validate
 ```
 
-Logs, scans and results are committed, so the last step runs without an API key. Generation and scanning need `ANTHROPIC_API_KEY` in `.env` (see `.env.example`).
+Logs, scans and results are committed, so step 4 runs without an API key. Generation and scanning need keys in `.env` (see `.env.example`): `ANTHROPIC_API_KEY`, and `OPENROUTER_API_KEY` for `openrouter/...` models.
+
+**Extending the harness:**
+- **A scanner model:** one line in `configs/scan.yaml` (any Inspect model string) plus a price row in `configs/prices.yaml`.
+- **A scanner variant:** one `@scanner` in `src/trajscan/scanners.py` that emits `Assessment`, registered in `SCANNERS`.
+- **A perturbation:** one entry in `PERTURBATIONS` in `src/trajscan/perturb.py`.
+- **A persona:** one YAML in `personas/`.
+
+Validation, metrics, figures and the leakage test pick new pieces up automatically.
 
 ## Layout
 
 - `personas/`: one YAML per persona (ground truth; never shown to the scanner)
-- `src/trajscan/`: `schema.py` (data contracts), `generate.py`, `perturb.py`, `scanners.py` (add a variant: one `@scanner` emitting `Assessment`), `validate.py`, `metrics.py`, `figures.py`
+- `src/trajscan/`: `schema.py` (data contracts), `generate.py`, `perturb.py`, `scanners.py`, `scan.py` (scan runner), `validate.py`, `metrics.py`, `figures.py`, `label.py` (blind self-labeling)
+- `configs/`: scanner models (`scan.yaml`) and prices (`prices.yaml`)
 - `tests/`: including a leakage test that loads every committed log as the scanner sees it
 - `docs/`: [`PLAN.md`](docs/PLAN.md), [`DECISIONS.md`](docs/DECISIONS.md) (every design choice, with alternatives), [`SAFETY.md`](docs/SAFETY.md), [`FINDINGS.md`](docs/FINDINGS.md)
 

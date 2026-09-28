@@ -1,0 +1,12 @@
+- scan: scans/scan_id=TnERQrRE46at2Vzo9mGJZ7
+  model: anthropic/claude-opus-5
+  where: null
+  created: '2026-09-28T00:00:00+00:00'
+- scan: scans/scan_id=KRdzA2rJYxLqJCEjwd56Vb
+  model: anthropic/claude-opus-5
+  where: task_id LIKE '%pad-%'
+  created: '2026-09-28T00:00:00+00:00'
+- scan: scans/scan_id=XwVuxarwy7aL3L7btRy7bX
+  model: anthropic/claude-haiku-4-5
+  where: task_id LIKE '%base'
+  created: '2026-09-28T07:23:10+00:00'

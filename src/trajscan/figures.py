@@ -69,7 +69,7 @@ def refusal_heatmap(refusals: pd.DataFrame, path: Path) -> None:
     ]
     values = df[stages].to_numpy(dtype=float)
     stage_names = ["User simulator", "Target"] + [
-        "Scanner:\n" + c.split(":", 1)[1].replace("_", " ") for c in stages[2:]
+        "Scanner:\n" + c.split(":", 1)[1].replace("_", " ").replace("@", "\n") for c in stages[2:]
     ]
     labels = [["n/a" if np.isnan(v) else f"{v:.0%}" for v in row] for row in values]
     rows = [
@@ -133,5 +133,72 @@ def confusion_heatmap(preds: pd.DataFrame, path: Path, title_suffix: str = "") -
         fontsize=11,
     )
     fig.tight_layout()
+    fig.savefig(path, dpi=200, facecolor=SURFACE)
+    plt.close(fig)
+
+
+# Categorical slots 1-2 of the reference palette (validated: CVD and contrast pass).
+SERIES = {"whole_transcript": ("#2a78d6", "o"), "per_turn": ("#eb6834", "s")}
+
+
+def cost_curve(metrics: pd.DataFrame, costs: pd.DataFrame, path: Path) -> None:
+    """Metric vs. cost per transcript for every scanner@model, one panel per metric.
+
+    Series = scanner (color + marker shape); points are labeled with the model,
+    so identity never depends on color alone.
+    """
+    panels = [
+        ("concerning_recall_failsafe", "Concerning recall\n(flagged or refused)"),
+        (
+            "hard_negative_review_burden",
+            "Hard-negative review burden\n(flagged or refused; lower is better)",
+        ),
+        ("category_macro_f1", "Threat-category macro-F1"),
+    ]
+    fig, axes = plt.subplots(1, len(panels), figsize=(13, 4.2), facecolor=SURFACE)
+    for ax, (metric, label) in zip(axes, panels, strict=True):
+        for scanner_key in costs.index:
+            scanner, _, model = scanner_key.partition("@")
+            if (scanner_key, metric) not in metrics.index:
+                continue
+            color, marker = SERIES.get(scanner, (TEXT_SECONDARY, "^"))
+            row = metrics.loc[(scanner_key, metric)]
+            x = costs.loc[scanner_key, "mean_cost_per_transcript"]
+            ax.errorbar(
+                x,
+                row["estimate"],
+                yerr=[[row["estimate"] - row["ci_low"]], [row["ci_high"] - row["estimate"]]],
+                fmt=marker,
+                color=color,
+                ecolor=color,
+                elinewidth=1,
+                capsize=0,
+                markersize=8,
+                markeredgecolor=SURFACE,
+                markeredgewidth=2,
+            )
+            ax.annotate(
+                model.split("/")[-1],
+                (x, row["estimate"]),
+                xytext=(6, 4),
+                textcoords="offset points",
+                fontsize=7,
+                color=TEXT_SECONDARY,
+            )
+        ax.set_xscale("log")
+        ax.set_ylim(-0.05, 1.05)
+        ax.set_title(label, loc="left", color=TEXT_PRIMARY, fontsize=10)
+        ax.set_xlabel("Mean scan cost per transcript (USD, log scale)", color=TEXT_SECONDARY)
+        ax.grid(color="#e8e7e3", linewidth=0.6)
+        ax.set_axisbelow(True)
+        ax.tick_params(colors=TEXT_SECONDARY, length=0)
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+    handles = [
+        plt.Line2D([], [], marker=m, color=c, linestyle="", markersize=8, label=s.replace("_", " "))
+        for s, (c, m) in SERIES.items()
+    ]
+    fig.legend(handles=handles, loc="upper right", frameon=False, fontsize=9)
+    fig.tight_layout(rect=(0, 0, 1, 0.93))
     fig.savefig(path, dpi=200, facecolor=SURFACE)
     plt.close(fig)

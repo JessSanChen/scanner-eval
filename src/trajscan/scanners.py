@@ -89,3 +89,8 @@ def per_turn() -> Scanner[Transcript]:
         return results
 
     return scan
+
+
+# Every scanner variant. The scan stage runs all of them; the leakage test
+# checks all of them. A new variant only needs to be added here.
+SCANNERS = {"whole_transcript": whole_transcript, "per_turn": per_turn}

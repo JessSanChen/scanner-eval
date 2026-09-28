@@ -1,0 +1,3 @@
+scanner,mean_cost_per_transcript,total_cost,n
+per_turn@anthropic/claude-opus-5,0.0,0.0,64
+whole_transcript@anthropic/claude-opus-5,0.068020515625,4.353313,64

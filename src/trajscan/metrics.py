@@ -106,7 +106,13 @@ def bootstrap_metrics(preds: pd.DataFrame, n_resamples: int = 1000, seed: int = 
     (same user turns in every seed) make them narrower still.
     """
     by_scanner = {name: df.set_index("transcript_id") for name, df in preds.groupby("scanner")}
-    reference = REFERENCE_SCANNER if REFERENCE_SCANNER in by_scanner else None
+
+    # Each variant is "scanner@model"; compare against whole_transcript on the same model.
+    def reference_for(name: str) -> str | None:
+        scanner, _, model = name.partition("@")
+        ref = f"{REFERENCE_SCANNER}@{model}" if model else REFERENCE_SCANNER
+        return ref if ref in by_scanner and ref != name else None
+
     ids_by_persona = [
         g.index.to_numpy() for _, g in next(iter(by_scanner.values())).groupby("persona")
     ]
@@ -116,12 +122,9 @@ def bootstrap_metrics(preds: pd.DataFrame, n_resamples: int = 1000, seed: int = 
             name: compute_metrics(df if ids is None else df.loc[ids])
             for name, df in by_scanner.items()
         }
-        if reference:
-            for name in by_scanner:
-                if name != reference:
-                    out[f"{name} - {reference}"] = {
-                        k: out[name][k] - out[reference][k] for k in out[name]
-                    }
+        for name in by_scanner:
+            if (ref := reference_for(name)) is not None:
+                out[f"{name} - {ref}"] = {k: out[name][k] - out[ref][k] for k in out[name]}
         return out
 
     rng = np.random.default_rng(seed)
