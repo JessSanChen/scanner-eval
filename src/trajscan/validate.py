@@ -47,6 +47,7 @@ def load_transcripts(logs_dir: Path) -> pd.DataFrame:
                     "variant": variant,
                     "true_risk": persona.ground_truth_risk,
                     "true_category": persona.threat_category,
+                    "persona_class": persona.persona_class,
                     "user_source": sample.metadata.get("user_source"),
                     "generation_refusal": sample.metadata.get("refusal"),
                     "turns_completed": sample.metadata.get("turns_completed"),

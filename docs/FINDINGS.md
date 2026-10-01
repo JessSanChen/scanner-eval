@@ -81,7 +81,7 @@ The concerning personas and the hard negatives are scripted by the author becaus
 - **Haiku 4.5 and Gemini 3.8 Flash** refused nothing.
 - **GPT-6 Luna and GPT-6 Sol** refused 1–3 transcripts each (mostly the auditor). These were blocked by OpenAI's bio classifier, which returns an HTTP 403 before the model sees the request.
 
-On the same transcripts, changing only Opus 5's prompt and output schema (from the minimal M4 scanner to the full M3 rubric) raised its whole-transcript refusal rate for the auditor persona from 0% to 50%. So refusal also depends on the scanner configuration.
+On the same transcripts, changing only Opus 5's prompt and output schema (from a minimal two-field scanner to the full rubric and `Assessment`) raised its whole-transcript refusal rate for the auditor persona from 0% to 50%. So refusal also depends on the scanner configuration.
 
 ### Accuracy and cost across scanner variants
 

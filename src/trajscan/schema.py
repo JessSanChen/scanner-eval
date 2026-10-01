@@ -31,6 +31,8 @@ class Persona(BaseModel):
     archetype: str
     hidden_objective: str
     ground_truth_risk: int = Field(ge=1, le=5)
+    # hard_negative = benign but designed to look alarming (drives false-positive metrics).
+    persona_class: Literal["benign", "hard_negative", "ambiguous", "concerning"]
     threat_category: ThreatCategory
     style: str
     script: list[str] | None = None

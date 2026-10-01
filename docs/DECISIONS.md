@@ -1,14 +1,27 @@
 # Decisions
 
-Append-only log. Each entry: the choice, alternatives considered, and why. Decisions made during planning, before this log existed, are summarized in `PLAN.md` under "Decisions already made".
+Append-only engineering log. Each entry records the choice, the alternatives considered, and why. Entries are chronological, so later entries can supersede earlier ones; the current design is summarized in [`DESIGN.md`](DESIGN.md).
+
+**Milestone labels used below:** M0 setup · M1 walking skeleton (all four stages end to end on tiny data) · M2 full persona set · M3 full `Assessment` schema, rubric and per-turn scanner · M4 metrics, bootstrap intervals and figures · M5 blind self-labeling · M6 perturbations · M7 scanner models and cost curve · M8 write-up.
+
+## Pre-build decisions
+
+- **Inspect for generation:** concurrency, retries, caching, provider switching, `inspect view`, and `.eval` logs that Scout reads natively.
+- **Inspect Scout's `llm_scanner` for scanning, not a hand-rolled judge:** the plumbing (transcript rendering, structured answers, message references) already exists, so effort goes into the schema, rubric and validation.
+- **An own simple generator, not Petri:** Petri's auditor is built to probe the target model, not to play a persona faithfully. Petri's judge could be a comparison scanner variant.
+- **Readable deterministic transcript IDs, not content hashes:** human-readable, and sufficient as a join key.
+- **No separate JSONL for transcripts:** `.eval` logs carry them.
+- **Validation in plain pandas, not Inspect scorers:** the part that should be fully visible and owned.
+- **Turn shuffling dropped as a perturbation:** for fragmented actors, order and escalation are themselves signal, so invariance isn't clearly correct.
+- **Refusal analysis of the target model out of scope:** the subject is the user (actor), not the assistant.
 
 ---
 
 ## 2026-09-26 — Project name: `trajscan`
 
 **Choice:** Call the project and package `trajscan` (trajectory scanner).
-**Alternatives:** `scanner-eval` (the repo directory name; accurate, but it describes the harness rather than the idea); a name that echoes the RAND team's tool.
-**Why:** The name is generic and points at the main research question: does scanning the whole conversation trajectory catch intent that per-turn scanning misses? It also avoids implying that this is the RAND team's own tool, which it is not.
+**Alternatives:** `scanner-eval` (the repo directory name; accurate, but it describes the harness rather than the idea).
+**Why:** The name is generic and points at the main research question: does scanning the whole conversation trajectory catch intent that per-turn scanning misses?
 
 ## 2026-09-26 — Anthropic models only (for now)
 
@@ -19,12 +32,12 @@ Append-only log. Each entry: the choice, alternatives considered, and why. Decis
 ## 2026-09-26 — Flat repo layout
 
 **Choice:** Put `pyproject.toml`, `src/trajscan/`, `personas/`, etc. directly at the repo root, not nested under a further subdirectory.
-**Alternatives:** A nested project directory, as the first draft of `PLAN.md` sketched.
+**Alternatives:** A nested project directory, as an early plan sketched.
 **Why:** The repo holds exactly one project, so an extra level would only add path noise.
 
 ## 2026-09-26 — Docs in `docs/`, README and CLAUDE.md at root
 
-**Choice:** `PLAN.md`, `DECISIONS.md` and `SAFETY.md` live in `docs/`. `README.md` and `CLAUDE.md` stay at the repo root.
+**Choice:** Reference docs (`DECISIONS.md`, `SAFETY.md`, and the original plan, since replaced by `DESIGN.md`) live in `docs/`. `README.md` and `CLAUDE.md` stay at the repo root.
 **Alternatives:** All markdown at the root (cluttered next to code and config); all markdown in `docs/` (tried; it broke three things).
 **Why:** Each root file has a job that depends on where it sits. `pyproject.toml` declares `readme = "README.md"`, and the build fails without it. GitHub shows the root README as the repo's landing page. Claude Code auto-loads `CLAUDE.md` only from the root. Everything else is reference material, so it goes in `docs/` to keep the root readable.
 
@@ -74,7 +87,7 @@ Append-only log. Each entry: the choice, alternatives considered, and why. Decis
 
 **Choice:** A turn means one user message plus the target's reply. `turns=4` gives 8 messages, and `turns_completed` counts exchanges.
 **Alternatives:** Counting individual messages.
-**Why:** The research questions are about what the *user* does across a conversation, and each user move comes with one reply. `PLAN.md`'s "8–12 turns" means exchanges.
+**Why:** The research questions are about what the *user* does across a conversation, and each user move comes with one reply. The original plan's "8–12 turns" means exchanges.
 
 ## 2026-09-27 — Concerning personas are scripted; benign personas are simulated (B1)
 
@@ -83,8 +96,8 @@ Append-only log. Each entry: the choice, alternatives considered, and why. Decis
 1. Sonnet 5 as simulator: its bio safety classifier refused to play `overt_evader` on the first turn, in both seeds (`stop_reason=content_filter`, category `bio`).
 2. Refusal fallback: Sonnet 5 rejects the `fallbacks` parameter (400: "does not support the `fallbacks` parameter").
 3. Opus 4.8, the suggested fallback model, used directly as simulator: refused on the first turn, category `bio`.
-**Alternatives:** Script every persona (B2, the cleanest, but too much writing for the deadline). Search for a model or wording that gets past the classifier (rejected: that is classifier evasion, which is inappropriate, especially in a biosecurity work sample).
-**Why:** It is the smallest change that gives M1 a concerning class. The scripts are written by the author, since the assistant's classifier also blocks drafting them.
+**Alternatives:** Script every persona (B2, the cleanest, but too much writing for the time available). Search for a model or wording that gets past the classifier (rejected: that is classifier evasion, which is inappropriate, especially in a biosecurity work sample).
+**Why:** It is the smallest change that gives M1 a concerning class. The scripts are written by the author; LLM drafting assistance is blocked by the same classifiers.
 **Limitation (must be stated in the write-up):** Benign and concerning conversations come from different processes. The scanner could key on "scripted vs. simulated" style rather than intent, which would inflate accuracy and bias the false-positive rate. `user_source` is recorded so results can be split by it. A future fix is to script some benign personas too, which gives a same-process comparison.
 **Finding in its own right:** Current Anthropic models won't simulate a user who is behaviorally evading biosafety oversight, even at textbook level. An LLM user simulator can't produce the concerning half of a synthetic eval set on this provider.
 
@@ -290,3 +303,10 @@ Base transcripts, both scanners, one scan per model (see `scans/manifest.yaml`).
 
 - **Flips.** Only Opus 5 scanned padded transcripts. For other models, padded rows were `no_result`, and the first version counted "scored → not scanned" as a flip (flip rate 1.0). Pairs where either side is `no_result` or `no_transcript` are now excluded, and variants with no scanned pairs get no row.
 - **Cost figure.** Ten labelled points collided, and no five-color categorical palette passed the all-pairs color-blind check. So the figure is now a dot plot: rows are models sorted by cost (identity by position and label), and color and marker encode only the scanner (a validated two-color pair).
+
+## 2026-10-01 — `persona_class` in the persona contract; design doc replaces the plan
+
+**Choice:**
+- Personas declare `persona_class` (`benign`, `hard_negative`, `ambiguous`, `concerning`). The hard-negative metrics select on that field instead of a hard-coded list of persona names in `metrics.py`.
+- `docs/DESIGN.md` describes the system as built and replaces the original plan, which remains in git history.
+**Why:** With a hard-coded list, adding a hard-negative persona needed a code change, which contradicts "a new persona is one YAML file". Results are unchanged (`results/metrics.csv` is identical before and after). The plan described intentions; a design doc describing the built system is more useful to a reader.

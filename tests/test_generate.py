@@ -44,6 +44,7 @@ def test_scripted_persona_sends_script_turns(
         "archetype: test\n"
         "hidden_objective: test objective\n"
         "ground_truth_risk: 1\n"
+        "persona_class: benign\n"
         "threat_category: none\n"
         "style: test\n"
         "script: [first line, second line]\n"

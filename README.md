@@ -134,7 +134,7 @@ Per transcript, scanning ranges from $0.0005 (GPT-6 Luna, whole) to $0.16 (Opus 
 - `configs/`: scanner models (`scan.yaml`) and prices (`prices.yaml`)
 - `logs/`, `scans/`, `results/`, `figures/`, `labels/`: committed artifacts (`logs/archive/` and `logs/refusal-evidence/` hold earlier runs and refusal probes)
 - `tests/`: unit tests, plus a leakage test that loads every committed log as each scanner sees it
-- `docs/`: [`FINDINGS.md`](docs/FINDINGS.md), [`DECISIONS.md`](docs/DECISIONS.md) (every design choice, with alternatives), [`SAFETY.md`](docs/SAFETY.md), [`PLAN.md`](docs/PLAN.md) (original plan)
+- `docs/`: [`DESIGN.md`](docs/DESIGN.md) (architecture, contracts, extension, scaling), [`FINDINGS.md`](docs/FINDINGS.md), [`DECISIONS.md`](docs/DECISIONS.md) (every design choice, with alternatives), [`SAFETY.md`](docs/SAFETY.md)
 
 ## Safety
 
